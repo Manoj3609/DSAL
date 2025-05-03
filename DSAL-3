@@ -1,0 +1,153 @@
+                      Experiment no-3
+
+Problem Statement:
+A book consists of chapters, chapters consist of sections and sections consist of subsections.
+Construct a tree and print the nodes. Find the time and space requirements of your method.
+
+
+Input:
+#include<iostream>
+using namespace std;
+
+struct node {
+    string name;
+    node* B[5];
+};
+
+class book {
+    int c, s, sub;
+public:
+    node* temp = new node;
+    void Getnewnode() {
+        for (int i = 0; i < 5; i++) {
+            temp->B[i] = new node;
+            temp->B[i]->name = "empty";
+            for (int j = 0; j < 5; j++) {
+                temp->B[i]->B[j] = new node;
+                temp->B[i]->B[j]->name = "empty";
+                for (int k = 0; k < 5; k++) {
+                    temp->B[i]->B[j]->B[k] = new node;
+                    temp->B[i]->B[j]->B[k]->name = "empty";
+                }
+            }
+        }
+    }
+
+    void add_title() {
+        cout << "Enter the title of the book: ";
+        cin >> temp->name;
+        Getnewnode();
+    }
+
+    void add_chapter() {
+        string cname;
+        cout << "Enter the number of chapters in the book: ";
+        cin >> c;
+        for (int i = 0; i < c; i++) {
+            cout << endl << "Chapter " << i + 1 << " = ";
+            cin >> cname;
+            temp->B[i]->name = cname;
+        }
+    }
+    void add_section() {
+        string sname;
+        cout << "Chapter number where you need to add sections = ";
+        int chnum;
+        cin >> chnum;
+
+        cout << "Enter number of sections = ";
+        cin >> s;
+        for (int i = 0; i < s; i++) {
+            cout << endl << "Section " << chnum << "." << i + 1 << " = ";
+            cin >> sname;
+            temp->B[chnum - 1]->B[i]->name = sname;
+        }
+    }
+
+    void add_sub_section() {
+        string subname;
+        cout << "Chapter number where you need to add sub-sections = ";
+        int chnum, snum;
+        cin >> chnum;
+
+        cout << "Section number where you need to add the sub-sections = ";
+        cin >> snum;
+
+        cout << "Enter the number of sub-sections = ";
+        cin >> sub;
+        for (int i = 0; i < sub; i++) {
+            cout << endl << "Sub-Section " << chnum << "." << snum << "." << i + 1 << " = ";
+            cin >> subname;
+            temp->B[chnum - 1]->B[snum - 1]->B[i]->name = subname;
+        }
+    }
+    void display() {
+        cout << endl << "=========== INDEX ============" << endl;
+        cout << endl << "Title: " << temp->name << endl;
+        cout << "Chapters: " << endl;
+
+        for (int i = 0; i < c; i++) {
+            if (temp->B[i]->name != "empty") {
+                cout << endl << ":" << i + 1<<" : "<< temp->B[i]->name;
+            }
+            for (int j = 0; j < s; j++) {
+                if (temp->B[i]->B[j]->name != "empty") {
+                    cout << endl << ":" << i + 1 << "." << j + 1 << " : " << temp->B[i]->B[j]->name;
+                }
+                for (int k = 0; k < sub; k++) {
+                    if (temp->B[i]->B[j]->B[k]->name != "empty") {
+                        cout << endl << ":" << i + 1 << "." << j + 1 << "." <<k+1<<" :"<< temp->B[i]->B[j]->B[k]->name;
+                    }
+                }
+            }
+        }
+        cout << endl;
+    }
+};
+
+int main() {
+    book s;
+    s.add_title();
+    s.add_chapter();
+    s.add_section();
+    s.add_sub_section();
+    s.display();
+    return 0;
+}
+Output:
+Enter the title of the book: History
+Enter the number of chapters in the book: 2
+
+Chapter 1 = Indian
+
+Chapter 2 = World
+Chapter number where you need to add sections = 1
+Enter number of sections = 2
+
+Section 1.1 = Pre-Independence
+
+Section 1.2 = Post-Independence
+Chapter number where you need to add sub-sections = 1
+Section number where you need to add the sub-sections = 1
+Enter the number of sub-sections = 2
+
+Sub-Section 1.1.1 = Revolt
+
+Sub-Section 1.1.2 = Protest
+
+=========== INDEX ============
+
+Title: History
+Chapters:
+
+:1 : Indian
+:1.1 : Pre-Independence
+:1.1.1 :Revolt
+:1.1.2 :Protest
+:1.2 : Post-Independence
+:2 : World
+
+--------------------------------
+Process exited after 48.77 seconds with return value 0
+Press any key to continue . . .
+
