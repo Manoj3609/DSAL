@@ -5,149 +5,173 @@ A book consists of chapters, chapters consist of sections and sections consist o
 Construct a tree and print the nodes. Find the time and space requirements of your method.
 
 
-Input:
+
 #include<iostream>
+#include<stdlib.h>
 using namespace std;
 
-struct node {
-    string name;
-    node* B[5];
-};
+struct node
+{
+	char label[60];
+	int chcount;
+	node *child[50];
+}*root;
 
-class book {
-    int c, s, sub;
-public:
-    node* temp = new node;
-    void Getnewnode() {
-        for (int i = 0; i < 5; i++) {
-            temp->B[i] = new node;
-            temp->B[i]->name = "empty";
-            for (int j = 0; j < 5; j++) {
-                temp->B[i]->B[j] = new node;
-                temp->B[i]->B[j]->name = "empty";
-                for (int k = 0; k < 5; k++) {
-                    temp->B[i]->B[j]->B[k] = new node;
-                    temp->B[i]->B[j]->B[k]->name = "empty";
-                }
-            }
-        }
-    }
+class general
+{
+	public:
+		void insert();
+		void display();
 
-    void add_title() {
-        cout << "Enter the title of the book: ";
-        cin >> temp->name;
-        Getnewnode();
-    }
-
-    void add_chapter() {
-        string cname;
-        cout << "Enter the number of chapters in the book: ";
-        cin >> c;
-        for (int i = 0; i < c; i++) {
-            cout << endl << "Chapter " << i + 1 << " = ";
-            cin >> cname;
-            temp->B[i]->name = cname;
-        }
-    }
-    void add_section() {
-        string sname;
-        cout << "Chapter number where you need to add sections = ";
-        int chnum;
-        cin >> chnum;
-
-        cout << "Enter number of sections = ";
-        cin >> s;
-        for (int i = 0; i < s; i++) {
-            cout << endl << "Section " << chnum << "." << i + 1 << " = ";
-            cin >> sname;
-            temp->B[chnum - 1]->B[i]->name = sname;
-        }
-    }
-
-    void add_sub_section() {
-        string subname;
-        cout << "Chapter number where you need to add sub-sections = ";
-        int chnum, snum;
-        cin >> chnum;
-
-        cout << "Section number where you need to add the sub-sections = ";
-        cin >> snum;
-
-        cout << "Enter the number of sub-sections = ";
-        cin >> sub;
-        for (int i = 0; i < sub; i++) {
-            cout << endl << "Sub-Section " << chnum << "." << snum << "." << i + 1 << " = ";
-            cin >> subname;
-            temp->B[chnum - 1]->B[snum - 1]->B[i]->name = subname;
-        }
-    }
-    void display() {
-        cout << endl << "=========== INDEX ============" << endl;
-        cout << endl << "Title: " << temp->name << endl;
-        cout << "Chapters: " << endl;
-
-        for (int i = 0; i < c; i++) {
-            if (temp->B[i]->name != "empty") {
-                cout << endl << ":" << i + 1<<" : "<< temp->B[i]->name;
-            }
-            for (int j = 0; j < s; j++) {
-                if (temp->B[i]->B[j]->name != "empty") {
-                    cout << endl << ":" << i + 1 << "." << j + 1 << " : " << temp->B[i]->B[j]->name;
-                }
-                for (int k = 0; k < sub; k++) {
-                    if (temp->B[i]->B[j]->B[k]->name != "empty") {
-                        cout << endl << ":" << i + 1 << "." << j + 1 << "." <<k+1<<" :"<< temp->B[i]->B[j]->B[k]->name;
-                    }
-                }
-            }
-        }
-        cout << endl;
-    }
-};
-
-int main() {
-    book s;
-    s.add_title();
-    s.add_chapter();
-    s.add_section();
-    s.add_sub_section();
-    s.display();
-    return 0;
+general()
+{
+	root==NULL;
 }
-Output:
-Enter the title of the book: History
-Enter the number of chapters in the book: 2
+};
 
-Chapter 1 = Indian
+void general::insert()
+{
+	int secount;
+	root = new node;
+	cout<<"Enter the name of book:"<<endl;
+	cin>>root->label;
+	cout<<"Enter the total number of chapter in box:"<<endl;
+	cin>>root->chcount;
+	for(int i=0;i<root->chcount;i++)
+	{
+		root->child[i]=new node();
+		cout<<"Enter the name of chapters"<<endl;
+		cin>>root->label;
+		
+		cout<<"Enter the number of sections:"<<endl;
+		cin>>root->child[i]->chcount;
+		for(int j=0;j<root->child[i]->chcount;j++)
+		{
+			root->child[i]->child[j]=new node();
+			cout<<"Enter the name of Section:"<<endl;
+			cin>>root->child[i]->child[j]->label;
+			
+			cout<<"Enter the number of sub section:"<<endl;
+			cin>>root->child[i]->child[j]->chcount;
+			for(int k=0;k<root->child[i]->child[j]->chcount;k++)
+			{
+				root->child[i]->child[j]->child[k] = new node();
+				cout<<"Enter the name of sub section:"<<endl;
+				cin>>root->child[i]->child[j]->child[k]->label;
+			}
+		}
+	}
+}
+void general::display()
+{
+	if(root!=NULL)
+	{
+		cout<<"********Hierarchy of Book*********"<<endl;
+		cout<<"Book Name is "<<root->label<<endl;
+		for(int i=0;i<root->chcount;i++)
+		{
+			cout<<"____"<<root->child[i]->label<<endl;
+			for(int j=0;j<root->child[i]->chcount;j++)
+			{
+				cout<<"____"<<root->child[i]->child[j]->label<<endl;
+				for(int k=0; k<root->child[i]->child[j]->chcount;k++)
+				{
+				  cout<<"___________"<<root->child[i]->child[j]->child[k]->label<<endl;
+			    }
+			}
+			
+		}
+	}
+}
 
-Chapter 2 = World
-Chapter number where you need to add sections = 1
-Enter number of sections = 2
+int main()
+{
+	general g;
+	int ch;
+	do
+	{
+		cout<<"~~~~~~~~~MENU~~~~~"<<endl;
+		cout<<"1.insert"<<endl;
+		cout<<"2.Display"<<endl;
+		cout<<"Enter the choice:"<<endl;
+		cin>>ch;
+		switch(ch)
+		{
+			case 1: g.insert();
+			break;
+			case 2: g.display();
+			break;
+		}
+	}while(ch<3);
+}
 
-Section 1.1 = Pre-Independence
 
-Section 1.2 = Post-Independence
-Chapter number where you need to add sub-sections = 1
-Section number where you need to add the sub-sections = 1
-Enter the number of sub-sections = 2
 
-Sub-Section 1.1.1 = Revolt
 
-Sub-Section 1.1.2 = Protest
 
-=========== INDEX ============
 
-Title: History
-Chapters:
 
-:1 : Indian
-:1.1 : Pre-Independence
-:1.1.1 :Revolt
-:1.1.2 :Protest
-:1.2 : Post-Independence
-:2 : World
 
---------------------------------
-Process exited after 48.77 seconds with return value 0
-Press any key to continue . . .
+
+
+
+
+
+OUTPUT:
+~~~~~~~~~MENU~~~~~
+1.insert
+2.Display
+Enter the choice:
+1
+Enter the name of book:
+java
+Enter the total number of chapter in box:
+2
+Enter the name of chapters
+operators
+Enter the number of sections:
+2
+Enter the name of Section:
+arithmetic
+Enter the number of sub section:
+1
+Enter the name of sub section:
+Addition
+Enter the name of Section:
+Logical
+Enter the number of sub section:
+2
+Enter the name of sub section:
+And
+Enter the name of sub section:
+Or
+Enter the name of chapters
+applet
+Enter the number of sections:
+1
+Enter the name of Section:
+lifecycle
+Enter the number of sub section:
+1
+Enter the name of sub section:
+beginning
+~~~~~~~~~MENU~~~~~
+1.insert
+2.Display
+Enter the choice:
+2
+********Hierarchy of Book*********
+Book Name is applet
+____
+____arithmetic
+___________Addition
+____Logical
+___________And
+___________Or
+____
+____lifecycle
+___________beginning
+
+
+
 
