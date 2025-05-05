@@ -5,182 +5,87 @@ Construct an expression tree from the given prefix expression rg. +--a*bc/def an
 using postorder traversal (non-recursive) and then delete the entire tree.
 
 
- #include<iostream>
- #include<cstdlib>
- #include<cstdio>
- #include<cstring>
- usingnamespacestd;
- classTreeN{
- public:chard;
- TreeN*l,*r;
- TreeN(chard){
- this->d=d;
- this->l=NULL;
- this->r=NULL;
- }
- };
- classStackNod{
- public:TreeN*treeN;
- StackNod*n;
- StackNod(TreeN*treeN){
- this->tr
- eeN=treeN;
- n=NULL;
- }
- };
- classExpressi
- onTree{
- private:StackNod*top;
- public:Expressi
- top=NULL;
- onTree(){
- }
-voidclear(){
- top=NULL;
- }
- voidpush(TreeN*ptr){
- if(top==NULL)
- top=newStackNod(ptr);
- else{
- StackNod*nptr=newStackNod(ptr);
- nptr->n=top;
- top=nptr;
- }
- }
- TreeN*pop(){
- if(top==NULL){
- cout<<"Underfl
- }else{
- ow"<<endl;
- TreeN*ptr=top->treeN;
- top=top->n;
- returnptr;
- }
- }
- TreeN*peek(){
- returntop->treeN;
- }
- voidinsert(charval
- if(i
- sDigit(val
- )){
- ){
- TreeN*nptr=newTreeN(val);
- push(nptr);
- }elseif(i
- sOperator(val
- )){
-TreeN*nptr=newTreeN(val);
- nptr->l=pop();
- nptr->r=pop();
- push(nptr);
- }else{
- cout<<"Inval
- idExpression"<<endl
- return;
- }
- }
- boolisDigi
- t(charch){
- returnch>='
- a'&&ch<='z';
- }
- boolisOperator(charch){
- returnch=='
- +'||ch=='
- }
- inttoDigi
- t(charch){
- returnch-'
- 0';
- }
- voidbuildTree(stri
- for(inti=eqn.l
- ;-'||ch=='
- *'||ch=='
- ngeqn){
- ength()-1;i>=0;i--)
- insert(eqn[
- i]);
- }
- voidpostfi
- x(){
- postOrder(peek());
- }
- voidpostOrder(TreeN*ptr){
- if(ptr!
- =NULL){
- postOrder(ptr
->l);
- postOrder(ptr
-/';
- >r);
-cout<<ptr
->d;
- }
- }
- voidinfi
- x(){
- inOrder(peek());
- }
- voidinOrder(TreeN*ptr){
- if(ptr!
- =NULL){
- inOrder(ptr
->l);
- cout<<ptr
->d;
- inOrder(ptr
->r);
- }
- }
- voidprefi
- x(){
- preOrder(peek());
- }
- voidpreOrder(TreeN*ptr){
- if(ptr!
- =NULL){
- cout<<ptr
->d;
- preOrder(ptr
->l);
- preOrder(ptr
->r);
- }
- }
- };
- intmain(){
- stri
- ngs;
- ExpressionTreeet;
- cout<<"\nEnterequati
- oninPrefixform:";
- cin>>s;
-et.bui
- ldTree(s);
- cout<<"\nPrefi
- x:";
- et.prefi
- x();
- cout<<"\n\nI
- et.i
- nfix();
- nfix:";
- cout<<"\n\nPostfi
- et.postfi
- x();
- }
- OUTPUT
- Enterequationi
- x:";
- nPrefixform:+--a*bc/def
- Prefix:+--
- a*bc/def
- Infi
- x:a-b*c-d/e+f
- Postfix:abc*-de/
-f+--------------------------------
- Processexitedafter13.
- 16secondswithreturnvalue0
- Pressanykeytocontinue...
+#include<iostream> 
+#include<stack> 
+#include<vector> 
+using namespace std; 
+struct Node 
+{  
+
+char value; 
+Node*left; 
+Node*right; 
+Node(char val):value(val),left(nullptr),right(nullptr){}
+};
+bool isOperator(char c) 
+{ 
+return c=='+'||c=='-'||c=='*'||c=='/'||c=='^'; 
+}
+Node*constructTree(string prefix) 
+{ 
+stack<Node*>stk; 
+for(int i=prefix.length()-1;i>=0;i--) 
+{ 
+if(isOperator(prefix[i])) 
+{ 
+Node*op1=stk.top();stk.pop(); 
+Node*op2=stk.top();stk.pop(); 
+Node*node=new Node(prefix[i]); 
+node->left=op1; 
+node->right=op2; 
+stk.push(node); 
+} 
+else 
+{ 
+stk.push(new Node(prefix[i])); 
+} 
+} 
+return stk.top(); 
+} 
+void deleteTree(Node* node) 
+{ 
+if (node==nullptr) 
+return; 
+deleteTree(node->left); 
+deleteTree(node->right); 
+delete node;
+}
+void postOrderTraversal (Node* root) 
+{ 
+if (!root) return; 
+stack<Node*> s1, s2; 
+s1.push(root); 
+Node* node; 
+while(!s1.empty()) 
+{ 
+node=s1.top(); 
+s1.pop(); 
+s2.push(node); 
+if(node->left) 
+s1.push(node->left); 
+if(node->right) 
+s1.push(node->right); 
+}
+while(!s2.empty()) 
+{ 
+node=s2.top(); 
+s2.pop(); 
+cout<<node->value<<' '; 
+} 
+}
+int main() 
+{ 
+string prefix="+--a*bc/def"; 
+Node* root=constructTree(prefix); 
+cout<<"Post-order traversal: "; 
+postOrderTraversal(root); 
+cout<<endl; 
+deleteTree(root); 
+return 0; 
+}
+
+
+
+
+Output:
+Post-order traversal: a b c * - d e / - f +
